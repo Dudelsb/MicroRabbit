@@ -2,7 +2,6 @@
 using MicroRabbit.Domain.Core.Bus;
 using MicroRabbit.Domain.Core.Commands;
 using MicroRabbit.Domain.Core.Events;
-using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -10,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace MicroRabbit.Infra.Bus
@@ -36,8 +34,8 @@ namespace MicroRabbit.Infra.Bus
         public void Publish<T>(T @event) where T : Event
         {
             var factory = new ConnectionFactory() { HostName = "localhost" };
-            using (var connection =factory.CreateConnection())
-            using (var channel=connection.CreateModel())
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
             {
                 var eventName = @event.GetType().Name;
                 channel.QueueDeclare(eventName, false, false, false, null);
@@ -47,7 +45,7 @@ namespace MicroRabbit.Infra.Bus
                 channel.BasicPublish("", eventName, null, body);
             }
 
-          
+
         }
 
         public void Subscribe<T, TH>()
@@ -63,12 +61,12 @@ namespace MicroRabbit.Infra.Bus
             }
             if (!_handlers.ContainsKey(eventName))
             {
-                _handlers.Add(eventName,new List<Type>());
+                _handlers.Add(eventName, new List<Type>());
             }
-            if (_handlers[eventName].Any(s=>s.GetType()==handlerType))
+            if (_handlers[eventName].Any(s => s.GetType() == handlerType))
             {
                 throw new ArgumentException(
-                    $"Handler Type {handlerType.Name} already is registered for {eventName}",nameof(handlerType));
+                    $"Handler Type {handlerType.Name} already is registered for {eventName}", nameof(handlerType));
             }
             _handlers[eventName].Add(handlerType);
             StartBasicConsume<T>();
@@ -101,14 +99,14 @@ namespace MicroRabbit.Infra.Bus
             {
                 await ProcessEvent(eventName, message).ConfigureAwait(false);
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
 
                 throw;
             }
         }
 
-        private async  Task ProcessEvent(string eventName, string message)
+        private async Task ProcessEvent(string eventName, string message)
         {
             if (_handlers.ContainsKey(eventName))
             {
@@ -116,16 +114,16 @@ namespace MicroRabbit.Infra.Bus
                 foreach (var subscription in subscriptions)
                 {
                     var handler = Activator.CreateInstance(subscription);
-                    if (handler==null)
+                    if (handler == null)
                     {
                         continue;
                     }
                     var eventType = _eventTypes.SingleOrDefault(t => t.Name == eventName);
                     var @event = JsonConvert.DeserializeObject(message, eventType);
                     var concreteType = typeof(IEventHandler<>).MakeGenericType(eventType);
-                    await (Task)concreteType.GetMethod("handle").Invoke(handler, new object[] { @event});
+                    await (Task)concreteType.GetMethod("handle").Invoke(handler, new object[] { @event });
                 }
-            }   
+            }
         }
     }
 }
