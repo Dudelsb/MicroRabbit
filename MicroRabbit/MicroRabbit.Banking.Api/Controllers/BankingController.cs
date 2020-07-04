@@ -2,9 +2,7 @@
 using MicroRabbit.Banking.Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MicroRabbit.Banking.Api.Controllers
 {
@@ -12,7 +10,7 @@ namespace MicroRabbit.Banking.Api.Controllers
     [Route("[controller]")]
     public class BankingController : ControllerBase
     {
-        
+
 
         private readonly ILogger<BankingController> _logger;
         private readonly IAccountService _accountService;
@@ -24,7 +22,7 @@ namespace MicroRabbit.Banking.Api.Controllers
         }
 
         [HttpGet]
-        public ActionResult< IEnumerable<Account>> Get()
+        public ActionResult<IEnumerable<Account>> Get()
         {
             return Ok(_accountService.GetAccounts());
         }

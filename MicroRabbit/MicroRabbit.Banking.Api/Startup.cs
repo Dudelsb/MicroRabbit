@@ -7,8 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Swashbuckle.Swagger;
-using System;
 
 namespace MicroRabbit.Banking.Api
 {
@@ -24,12 +22,14 @@ namespace MicroRabbit.Banking.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<BankingDBContext>(options => {
+            services.AddDbContext<BankingDBContext>(options =>
+            {
                 options.UseSqlServer(Configuration.GetConnectionString("BankingDBConnection"));
             });
             services.AddControllers();
-            services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title="Banking MicroService",Version="v1"});
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Banking MicroService", Version = "v1" });
             });
             services.AddMediatR(typeof(Startup));
             RegisterServices(services);
@@ -54,8 +54,9 @@ namespace MicroRabbit.Banking.Api
 
             app.UseAuthorization();
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json","Banking MicroService v1");
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Banking MicroService v1");
             });
 
             app.UseEndpoints(endpoints =>
