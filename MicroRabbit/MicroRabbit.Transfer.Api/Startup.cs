@@ -30,7 +30,7 @@ namespace MicroRabbit.Transfer.Api
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Banking MicroService", Version = "v1" });
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Transfer MicroService", Version = "v1" });
             });
             services.AddMediatR(typeof(Startup));
             RegisterServices(services);
@@ -54,6 +54,7 @@ namespace MicroRabbit.Transfer.Api
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Transfer MicroService v1");
