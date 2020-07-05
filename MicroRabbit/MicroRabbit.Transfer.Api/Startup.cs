@@ -32,7 +32,7 @@ namespace MicroRabbit.Transfer.Api
 
             services.AddDbContext<TransferDBContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("BankingDBConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("TransferDbConnection"));
             });
             services.AddControllers();
             services.AddSwaggerGen(c =>
