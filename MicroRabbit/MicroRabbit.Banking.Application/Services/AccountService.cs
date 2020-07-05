@@ -24,7 +24,7 @@ namespace MicroRabbit.Banking.Application.Services
 
         public void Tranfer(AccountTransfer accountTransfer)
         {
-            var createTransferCommand = new CreateTranferCommand( 
+            var createTransferCommand = new CreateTranferCommand(
                 accountTransfer.FromAccount,
                 accountTransfer.ToAccount,
                 accountTransfer.TransferAmount
